@@ -1,0 +1,95 @@
+# ===== Dependencies =====
+node_modules/
+vendor/
+venv/
+.venv/
+__pypackages__/
+.bundle/
+bower_components/
+
+# ===== Build output =====
+dist/
+build/
+out/
+target/
+bin/
+obj/
+*.o
+*.a
+*.so
+*.dylib
+*.dll
+*.exe
+*.out
+*.class
+*.jar
+*.war
+
+# ===== Environment and secrets =====
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+*.p12
+secrets/
+
+# ===== Runtime and cache =====
+*.log
+*.pid
+*.seed
+logs/
+tmp/
+temp/
+.cache/
+.parcel-cache/
+.next/
+.nuxt/
+.turbo/
+.svelte-kit/
+.output/
+.vercel/
+.netlify/
+
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+.eggs/
+*.whl
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+htmlcov/
+.coverage
+.coverage.*
+
+# ===== Rust =====
+target/
+**/*.rs.bk
+
+# ===== IDE and editors =====
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# ===== OS files =====
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ===== Testing and coverage =====
+coverage/
+*.lcov
+.nyc_output/
