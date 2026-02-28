@@ -93,3 +93,9 @@ Desktop.ini
 coverage/
 *.lcov
 .nyc_output/
+playwright-report/
+test-results/
+.playwright/
+
+# ===== Vite =====
+*.local
