@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <rect width="32" height="32" rx="8" fill="#2563eb"/>
+  <!-- Anchor icon for river navigation -->
+  <path d="M16 6a3 3 0 1 0 0 6 3 3 0 0 0 0-6z" fill="white"/>
+  <path d="M16 11v14" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <path d="M10 25c1.5-1 4-1.5 6-1.5s4.5.5 6 1.5" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <path d="M10 18h12" stroke="white" stroke-width="2" stroke-linecap="round"/>
+</svg>
