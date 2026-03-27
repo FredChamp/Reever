@@ -1,4 +1,7 @@
-import type { ETAResult } from '@/types'
+import type { ETAResult, SpeedUnit } from '@/types'
+
+/** 1 nautical mile = 1.852 km */
+export const KM_PER_NM = 1.852
 
 export interface ETAInput {
   distanceKm: number
@@ -21,7 +24,38 @@ export function formatDuration(totalMin: number): string {
 }
 
 /**
- * Calculate ETA for a river boat trip.
+ * Convert km to nautical miles.
+ */
+export function kmToNm(km: number): number {
+  return km / KM_PER_NM
+}
+
+/**
+ * Convert knots to km/h.
+ */
+export function knotsToKmh(knots: number): number {
+  return knots * KM_PER_NM
+}
+
+/**
+ * Convert km/h to knots.
+ */
+export function kmhToKnots(kmh: number): number {
+  return kmh / KM_PER_NM
+}
+
+/**
+ * Format speed with the appropriate unit.
+ */
+export function formatSpeed(kmh: number, unit: SpeedUnit): string {
+  if (unit === 'knots') {
+    return `${kmhToKnots(kmh).toFixed(1)} kn`
+  }
+  return `${kmh} km/h`
+}
+
+/**
+ * Calculate ETA for a boat trip.
  *
  * Formula:
  *   waterTimeMin = (distanceKm / boatSpeedKmh) * 60
@@ -37,6 +71,7 @@ export function calculateETA(input: ETAInput): ETAResult {
 
   return {
     distanceKm,
+    distanceNm: Math.round(kmToNm(distanceKm) * 10) / 10,
     lockCount,
     waterTimeMin,
     lockTimeMin,

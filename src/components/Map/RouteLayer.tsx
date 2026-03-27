@@ -22,42 +22,40 @@ export function RouteLayer({ map }: RouteLayerProps) {
       properties: {},
     }
 
-    // Add source if not present
     if (!map.getSource(SOURCE_ID)) {
       map.addSource(SOURCE_ID, {
         type: 'geojson',
         data: emptyFeature,
       })
 
-      // Glow / shadow layer for visual depth
+      // Outer glow — cyan for dark theme
       map.addLayer({
         id: LAYER_GLOW_ID,
         type: 'line',
         source: SOURCE_ID,
         layout: { 'line-cap': 'round', 'line-join': 'round' },
         paint: {
-          'line-color': '#93c5fd',
-          'line-width': 10,
-          'line-opacity': 0.5,
-          'line-blur': 4,
+          'line-color': '#22d3ee',
+          'line-width': 12,
+          'line-opacity': 0.3,
+          'line-blur': 6,
         },
       })
 
-      // Main route line
+      // Main route line — bright cyan
       map.addLayer({
         id: LAYER_ID,
         type: 'line',
         source: SOURCE_ID,
         layout: { 'line-cap': 'round', 'line-join': 'round' },
         paint: {
-          'line-color': '#2563eb',
+          'line-color': '#06b6d4',
           'line-width': 4,
           'line-opacity': 0.95,
         },
       })
     }
 
-    // Update source data
     const source = map.getSource(SOURCE_ID) as maplibregl.GeoJSONSource | undefined
     if (source) {
       source.setData(route ?? emptyFeature)

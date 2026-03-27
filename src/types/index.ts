@@ -18,19 +18,59 @@ export interface Lock {
   id: string
   name: string
   coordinates: LngLat
-  /** Optional extra metadata from OSM */
   lockRef?: string
   operator?: string
   openingHours?: string
 }
 
-// ─── River Navigation Sign (CEVNI) ────────────────────────────────────────────
+// ─── Maritime Seamark Types ──────────────────────────────────────────────────
+
+export type SeamarkCategory =
+  | 'buoy_lateral'
+  | 'buoy_cardinal'
+  | 'buoy_isolated_danger'
+  | 'buoy_safe_water'
+  | 'buoy_special_purpose'
+  | 'light_major'
+  | 'light_minor'
+  | 'harbour'
+  | 'beacon_lateral'
+  | 'beacon_cardinal'
+  | 'notice'       // CEVNI inland signs
+
+export type LateralSide = 'port' | 'starboard'
+export type CardinalDirection = 'north' | 'south' | 'east' | 'west'
+
+export interface Seamark {
+  id: string
+  name: string
+  coordinates: LngLat
+  category: SeamarkCategory
+  /** For lateral marks: port or starboard */
+  side?: LateralSide
+  /** For cardinal marks: direction */
+  cardinal?: CardinalDirection
+  /** Light character (e.g. "Fl(3) 10s") */
+  lightCharacter?: string
+  /** Light color */
+  lightColor?: string
+  /** CEVNI code for notices */
+  noticeCode?: string
+  /** Color description */
+  color?: string
+  /** Shape description */
+  shape?: string
+  /** Raw OSM tags for extra info */
+  tags?: Record<string, string>
+}
+
+// ─── River Navigation Sign (CEVNI) — kept for backwards compat ──────────────
 
 export type SignCategory =
-  | 'prohibition'   // red border, white/blue — no entry, no overtaking, etc.
-  | 'obligation'    // blue circle — keep right, sound horn, etc.
-  | 'warning'       // yellow/diamond — hazard, low bridge, shallow water
-  | 'information'   // white rectangle — information, distances
+  | 'prohibition'
+  | 'obligation'
+  | 'warning'
+  | 'information'
 
 export interface RiverSign {
   id: string
@@ -38,7 +78,6 @@ export interface RiverSign {
   description: string
   coordinates: LngLat
   category: SignCategory
-  /** CEVNI sign code, e.g. "A.1", "B.1" */
   code?: string
 }
 
@@ -47,7 +86,6 @@ export interface RiverSign {
 export interface Route {
   geojson: GeoJSON.Feature<GeoJSON.LineString>
   distanceKm: number
-  /** Locks detected within the route corridor */
   locksOnRoute: Lock[]
 }
 
@@ -55,24 +93,50 @@ export interface Route {
 
 export interface ETAResult {
   distanceKm: number
+  distanceNm: number
   lockCount: number
-  /** Time underway excluding locks */
   waterTimeMin: number
-  /** Total lock waiting and transit time */
   lockTimeMin: number
   totalTimeMin: number
-  /** Human-readable total, e.g. "4 h 35 min" */
   totalFormatted: string
 }
+
+// ─── Speed Unit ──────────────────────────────────────────────────────────────
+
+export type SpeedUnit = 'kmh' | 'knots'
 
 // ─── App Settings ─────────────────────────────────────────────────────────────
 
 export interface AppSettings {
-  /** Cruising speed in km/h (3–20) */
+  /** Cruising speed in km/h (3–40) */
   boatSpeedKmh: number
   /** Average time per lock in minutes (10–60) */
   lockTransitMin: number
+  /** Display unit for speed */
+  speedUnit: SpeedUnit
 }
+
+// ─── Layer Visibility ────────────────────────────────────────────────────────
+
+export interface LayerVisibility {
+  lateralMarks: boolean
+  cardinalMarks: boolean
+  dangerMarks: boolean
+  lights: boolean
+  ports: boolean
+  locks: boolean
+  notices: boolean
+  specialMarks: boolean
+  seaOverlay: boolean
+}
+
+// ─── Map View State ──────────────────────────────────────────────────────────
+
+export type MapViewMode = '2d' | '3d'
+
+// ─── Bottom Sheet ────────────────────────────────────────────────────────────
+
+export type BottomSheetSnap = 'collapsed' | 'half' | 'full'
 
 // ─── Overpass API ─────────────────────────────────────────────────────────────
 

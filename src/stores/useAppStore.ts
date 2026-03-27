@@ -1,11 +1,27 @@
 import { create } from 'zustand'
-import type { Waypoint, Lock, RiverSign, ETAResult, AppSettings } from '@/types'
+import type {
+  Waypoint, Lock, Seamark, ETAResult, AppSettings,
+  LayerVisibility, MapViewMode, BottomSheetSnap,
+} from '@/types'
 import { buildRoute, getLocksOnRoute } from '@/utils/routeUtils'
 import { calculateETA } from '@/utils/etaCalculator'
 
 const DEFAULT_SETTINGS: AppSettings = {
   boatSpeedKmh: 8,
   lockTransitMin: 30,
+  speedUnit: 'kmh',
+}
+
+const DEFAULT_LAYERS: LayerVisibility = {
+  lateralMarks: true,
+  cardinalMarks: true,
+  dangerMarks: true,
+  lights: true,
+  ports: true,
+  locks: true,
+  notices: true,
+  specialMarks: true,
+  seaOverlay: true,
 }
 
 interface AppState {
@@ -16,13 +32,13 @@ interface AppState {
   clearWaypoints: () => void
   updateWaypointPosition: (id: string, lngLat: [number, number]) => void
 
-  // All known locks (from Overpass or mock)
+  // All known locks (from Overpass)
   allLocks: Lock[]
   setAllLocks: (locks: Lock[]) => void
 
-  // Navigation signs
-  signs: RiverSign[]
-  setSigns: (signs: RiverSign[]) => void
+  // Seamarks (from Overpass — buoys, lights, ports, etc.)
+  seamarks: Seamark[]
+  setSeamarks: (seamarks: Seamark[]) => void
 
   // Derived: computed route
   route: GeoJSON.Feature<GeoJSON.LineString> | null
@@ -37,9 +53,23 @@ interface AppState {
   settings: AppSettings
   updateSettings: (patch: Partial<AppSettings>) => void
 
-  // UI
-  sidebarOpen: boolean
-  toggleSidebar: () => void
+  // Layer visibility
+  layers: LayerVisibility
+  toggleLayer: (key: keyof LayerVisibility) => void
+
+  // Map view mode
+  viewMode: MapViewMode
+  setViewMode: (mode: MapViewMode) => void
+
+  // Bottom sheet
+  bottomSheet: BottomSheetSnap
+  setBottomSheet: (snap: BottomSheetSnap) => void
+
+  // Loading / error
+  loading: boolean
+  setLoading: (loading: boolean) => void
+  error: string | null
+  setError: (error: string | null) => void
 }
 
 function recompute(
@@ -72,12 +102,16 @@ function recompute(
 export const useAppStore = create<AppState>((set, get) => ({
   waypoints: [],
   allLocks: [],
-  signs: [],
+  seamarks: [],
   route: null,
   locksOnRoute: [],
   etaResult: null,
   settings: DEFAULT_SETTINGS,
-  sidebarOpen: true,
+  layers: DEFAULT_LAYERS,
+  viewMode: '3d',
+  bottomSheet: 'collapsed',
+  loading: false,
+  error: null,
 
   addWaypoint: (waypoint) => {
     const { waypoints, allLocks, settings } = get()
@@ -112,7 +146,7 @@ export const useAppStore = create<AppState>((set, get) => ({
     set({ allLocks, ...derived })
   },
 
-  setSigns: (signs) => set({ signs }),
+  setSeamarks: (seamarks) => set({ seamarks }),
 
   updateSettings: (patch) => {
     const { waypoints, allLocks, settings } = get()
@@ -121,5 +155,12 @@ export const useAppStore = create<AppState>((set, get) => ({
     set({ settings: newSettings, ...derived })
   },
 
-  toggleSidebar: () => set((s) => ({ sidebarOpen: !s.sidebarOpen })),
+  toggleLayer: (key) => set((s) => ({
+    layers: { ...s.layers, [key]: !s.layers[key] },
+  })),
+
+  setViewMode: (viewMode) => set({ viewMode }),
+  setBottomSheet: (bottomSheet) => set({ bottomSheet }),
+  setLoading: (loading) => set({ loading }),
+  setError: (error) => set({ error }),
 }))

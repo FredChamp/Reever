@@ -11,28 +11,32 @@ function createWaypointEl(index: number, total: number): HTMLElement {
   const isStart = index === 0
   const isEnd = index === total - 1
 
-  let bg = '#6366f1' // mid-point: indigo
-  if (isStart) bg = '#10b981'  // start: emerald green
-  if (isEnd) bg = '#ef4444'    // end: red
+  let bg = '#6366f1'
+  let glow = 'rgba(99, 102, 241, 0.4)'
+  if (isStart) { bg = '#10b981'; glow = 'rgba(16, 185, 129, 0.4)' }
+  if (isEnd) { bg = '#ef4444'; glow = 'rgba(239, 68, 68, 0.4)' }
 
   const el = document.createElement('div')
   el.style.cssText = `
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     background: ${bg};
-    border: 3px solid white;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    border: 3px solid rgba(255,255,255,0.9);
+    box-shadow: 0 0 12px ${glow}, 0 2px 8px rgba(0,0,0,0.3);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
     color: white;
     cursor: grab;
     font-family: system-ui, sans-serif;
+    transition: box-shadow 0.15s ease;
   `
   el.textContent = isStart ? 'A' : isEnd ? 'B' : String(index + 1)
+  el.addEventListener('mouseenter', () => { el.style.boxShadow = `0 0 20px ${glow}, 0 4px 12px rgba(0,0,0,0.4)` })
+  el.addEventListener('mouseleave', () => { el.style.boxShadow = `0 0 12px ${glow}, 0 2px 8px rgba(0,0,0,0.3)` })
   return el
 }
 
@@ -45,7 +49,6 @@ export function WaypointLayer({ map }: WaypointLayerProps) {
     const currentIds = new Set(waypoints.map((w) => w.id))
     const existingIds = new Set(markersRef.current.keys())
 
-    // Remove markers for deleted waypoints
     for (const id of existingIds) {
       if (!currentIds.has(id)) {
         markersRef.current.get(id)?.remove()
@@ -53,15 +56,12 @@ export function WaypointLayer({ map }: WaypointLayerProps) {
       }
     }
 
-    // Add/update markers
     waypoints.forEach((wp: Waypoint, index: number) => {
       const el = createWaypointEl(index, waypoints.length)
 
       if (markersRef.current.has(wp.id)) {
-        // Update position and element
         const marker = markersRef.current.get(wp.id)!
         marker.setLngLat(wp.lngLat)
-        // Replace element by removing and re-adding
         marker.remove()
         markersRef.current.delete(wp.id)
       }
@@ -82,7 +82,6 @@ export function WaypointLayer({ map }: WaypointLayerProps) {
     })
   }, [map, waypoints, updateWaypointPosition])
 
-  // Cleanup on unmount
   useEffect(() => {
     return () => {
       markersRef.current.forEach((m) => m.remove())

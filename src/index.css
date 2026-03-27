@@ -11,26 +11,79 @@ html, body, #root {
   height: 100%;
   margin: 0;
   padding: 0;
+  background: #0a1628;
+  color: #e2e8f0;
 }
 
-/* ── MapLibre custom popup styling ─────────────────────── */
+/* ── MapLibre custom popup styling (dark theme) ──────── */
 .reever-popup .maplibregl-popup-content {
   padding: 0;
-  border-radius: 10px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(34, 211, 238, 0.2);
   font-family: 'Inter', system-ui, sans-serif;
   overflow: hidden;
+  background: #0f2038;
+  color: #e2e8f0;
 }
 
 .reever-popup .maplibregl-popup-tip {
-  border-top-color: #e2e8f0;
+  border-top-color: rgba(34, 211, 238, 0.2);
 }
 
-/* ── MapLibre attribution override ─────────────────────── */
+.reever-popup .maplibregl-popup-close-button {
+  color: #94a3b8;
+  font-size: 18px;
+  padding: 4px 8px;
+}
+.reever-popup .maplibregl-popup-close-button:hover {
+  color: #22d3ee;
+  background: transparent;
+}
+
+/* ── MapLibre controls dark theme ─────────────────────── */
+.maplibregl-ctrl-group {
+  background: #0f2038 !important;
+  border: 1px solid rgba(34, 211, 238, 0.15) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+  border-radius: 12px !important;
+  overflow: hidden;
+}
+
+.maplibregl-ctrl-group button {
+  background: transparent !important;
+  border-bottom: 1px solid rgba(34, 211, 238, 0.1) !important;
+}
+
+.maplibregl-ctrl-group button:hover {
+  background: rgba(34, 211, 238, 0.1) !important;
+}
+
+.maplibregl-ctrl-group button span {
+  filter: invert(0.7) sepia(1) saturate(3) hue-rotate(160deg);
+}
+
 .maplibregl-ctrl-attrib {
   font-size: 10px !important;
-  opacity: 0.7;
+  opacity: 0.5;
+  background: rgba(10, 22, 40, 0.8) !important;
+  color: #94a3b8 !important;
+}
+
+.maplibregl-ctrl-attrib a {
+  color: #67e8f9 !important;
+}
+
+.maplibregl-ctrl-scale {
+  background: rgba(10, 22, 40, 0.8) !important;
+  color: #94a3b8 !important;
+  border-color: #94a3b8 !important;
+  border-radius: 4px;
+}
+
+/* ── Geolocate control ────────────────────────────────── */
+.maplibregl-user-location-dot {
+  box-shadow: 0 0 12px rgba(34, 211, 238, 0.6);
 }
 
 /* ── Range input styling ────────────────────────────────── */
@@ -38,22 +91,73 @@ input[type="range"] {
   -webkit-appearance: none;
   appearance: none;
   outline: none;
+  height: 6px;
+  border-radius: 3px;
+  background: #162d4d;
 }
 
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
-  background: currentColor;
+  background: #22d3ee;
   cursor: pointer;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  box-shadow: 0 0 8px rgba(34, 211, 238, 0.4);
+  transition: box-shadow 0.15s ease;
 }
 
-input[type="range"].accent-water-600::-webkit-slider-thumb {
-  background: #2563eb;
+input[type="range"]::-webkit-slider-thumb:hover {
+  box-shadow: 0 0 16px rgba(34, 211, 238, 0.6);
 }
 
-input[type="range"].accent-amber-500::-webkit-slider-thumb {
-  background: #f59e0b;
+/* ── Bottom sheet transitions ──────────────────────────── */
+.bottom-sheet {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+/* ── Floating button glow ──────────────────────────────── */
+.fab-glow {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), 0 0 20px rgba(6, 182, 212, 0.15);
+  transition: all 0.2s ease;
+}
+.fab-glow:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5), 0 0 30px rgba(6, 182, 212, 0.3);
+  transform: scale(1.05);
+}
+.fab-glow:active {
+  transform: scale(0.95);
+}
+
+/* ── Scrollbar styling ─────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #2a4a73;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3b5f87;
+}
+
+/* ── Layer toggle ──────────────────────────────────────── */
+.layer-toggle {
+  transition: all 0.15s ease;
+}
+.layer-toggle:hover {
+  background: rgba(34, 211, 238, 0.08);
+}
+
+/* ── Loading pulse ─────────────────────────────────────── */
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+.loading-pulse {
+  animation: pulse-glow 1.5s ease-in-out infinite;
 }
